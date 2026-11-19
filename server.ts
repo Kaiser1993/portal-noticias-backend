@@ -93,6 +93,48 @@ mensagem: "Administrador cadastrado com sucesso."
 }
 });
 
+//rota para excluir administrador
+app.delete("/administradores/:id", async(req, res) => {
+const {id} = req.params;
+try {
+    await pool.query(
+        "DELETE FROM administrador WHERE id = $1",
+        [id]
+    );
+    res.json({
+        mensagem: "Administrador excluido com sucesso!"
+
+    });
+} catch (error) {
+    console.log(error);
+    res.status(500).json({
+        mensagem: "Erro ao excluir o administrador: " + error
+
+    });
+}
+})
+
+//rota para alterar o administrador
+app.put("/administradores/:id", async(req, res) => {
+const {id} = req.params;
+const {nome, email, senha} = req.body;
+try {
+    await pool.query(
+        "UPDATE administrador SET nome = $1, email = $2, senha = $3 WHERE id = $4",
+        [nome, email, senha, id]
+    );
+    res.json({
+        mensagem: "Administrador alterado com sucesso!"
+
+    });
+} catch (error) {
+    console.log(error);
+    res.status(500).json({
+        mensagem: "Erro ao alterar o administrador: " + error
+    })
+}
+});
+
 app.listen(3000, () => {
     console.log("Servidor iniciado na porta 3000!")
 })
